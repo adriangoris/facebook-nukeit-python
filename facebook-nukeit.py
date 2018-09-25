@@ -1,7 +1,7 @@
 #!/usr/bin/env
 
+import ConfigParser, os
 from time import sleep
-import time
 from datetime import datetime, timedelta
 from collections import OrderedDict
 from selenium import webdriver
@@ -14,12 +14,18 @@ from selenium.common.exceptions import NoSuchElementException
 # from selenium.webdriver.support import expected_conditions
 # import pickle
 
-USERNAME=''
-PASSWORD=''
-
 class FacebookNukeIt():
 
-    def __init__(self):
+    def __init__(self, username, password):
+        if username == None:
+            print "no username provided in config"
+            return False
+        if password == None:
+            print "no password provided in config"
+            return False
+
+        self.username = username
+        self.password = password
         
         self.fb_activity_url = "https://mbasic.facebook.com/adriangoris/allactivity"
 
@@ -27,13 +33,12 @@ class FacebookNukeIt():
         prefs = {"profile.default_content_setting_values.notifications" : 2}
         chrome_options.add_experimental_option("prefs",prefs)
 
-        
         self.driver = webdriver.Chrome(executable_path="/usr/local/bin/chromedriver", chrome_options=chrome_options)
+        return True
 
+    def run(self, start_date, end_date):
 
-    def run(self):
-
-        dates = ["2011-01-01", "2018-10-01"]
+        dates = [start_date, end_date]
 
         start, end = [datetime.strptime(_, "%Y-%m-%d") for _ in dates]
         self.date_range_list = OrderedDict(((start + timedelta(_)).strftime(r"%B %Y"), None) for _ in xrange((end - start).days)).keys()
@@ -42,10 +47,10 @@ class FacebookNukeIt():
         self.driver.get('https://mbasic.facebook.com/')
         print("Opened facebook...")
         a = self.driver.find_element_by_id('m_login_email')
-        a.send_keys(USERNAME)
+        a.send_keys(self.username)
         print("Email Id entered...")
         b = self.driver.find_element_by_name('pass')
-        b.send_keys(PASSWORD)
+        b.send_keys(self.password)
         print("Password entered...")
         c = self.driver.find_element_by_name('login')
         c.click()
@@ -99,8 +104,6 @@ class FacebookNukeIt():
         # self.load_more_activity()
         return True
 
-
-
     def load_month_activity(self):
         date_text = self.date_range_list[-1]
         try:
@@ -116,7 +119,6 @@ class FacebookNukeIt():
         
         self.load_year_activity()
         return False
-
 
     def delete_activity(self):
         try:
@@ -137,7 +139,15 @@ class FacebookNukeIt():
         self.unlike_activity()
 
 def main():
-    FacebookNukeIt().run()
+    config = ConfigParser.ConfigParser()
+    config.read('config.cfg')
+    fb_username = config.get('facebook', 'username')
+    fb_password = config.get('facebook', 'password')
+    start_date = config.get('facebook', 'start_date')
+    end_date = config.get('facebook', 'end_date')
+
+    fbni = FacebookNukeIt(fb_username, fb_password)
+    fbni.run(start_date, end_date)
 
 
 if __name__ == '__main__':

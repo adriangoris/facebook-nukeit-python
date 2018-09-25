@@ -1,0 +1,3 @@
+selenium==3.12.0
+selenium-requests==1.3
+configparser==3.5.0

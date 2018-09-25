@@ -1,6 +1,6 @@
 #!/usr/bin/env
 
-import ConfigParser, os
+import ConfigParser
 from time import sleep
 from datetime import datetime, timedelta
 from collections import OrderedDict
@@ -34,7 +34,6 @@ class FacebookNukeIt():
         chrome_options.add_experimental_option("prefs",prefs)
 
         self.driver = webdriver.Chrome(executable_path="/usr/local/bin/chromedriver", chrome_options=chrome_options)
-        return True
 
     def run(self, start_date, end_date):
 

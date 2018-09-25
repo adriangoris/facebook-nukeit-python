@@ -21,7 +21,11 @@ A step by step series of examples that tell you how to get a development env run
 Say what the step will be
 
 ```
-Give the example
+git clone https://github.com/adriangoris/facebook-nukeit-python.git
+cd facebook-nukeit-python
+pip install -r requirements.txt
+cp config.cfg.example config.cfg
+python facebook-nukeit.py
 ```
 
 And repeat

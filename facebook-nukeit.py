@@ -26,9 +26,8 @@ class FacebookNukeIt():
 
         self.username = username
         self.password = password
-        
-        self.fb_activity_url = "https://mbasic.facebook.com/adriangoris/allactivity"
-
+        self.fb_activity_url = "https://mbasic.facebook.com/" + username +  "/allactivity"
+        print self.fb_activity_url
         chrome_options = webdriver.ChromeOptions()
         prefs = {"profile.default_content_setting_values.notifications" : 2}
         chrome_options.add_experimental_option("prefs",prefs)

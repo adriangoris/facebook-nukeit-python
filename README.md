@@ -8,11 +8,32 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisites
 
-What things you need to install the software and how to install them
+Make sure that pip is up to date, Python is installed and you are running chromedriver version 2.42.
 
 ```
-Give examples
+pip install --upgrade pip
+brew install Python
 ```
+
+To check your chromedriver version
+
+```
+chromedriver --version
+```
+
+If your version is not 2.42 do one of the following:
+
+```
+brew uninstall chromedriver
+brew tap homebrew/cask
+brew cask install chromedriver
+chromedriver --version
+```
+
+or download it from here:
+
+https://chromedriver.storage.googleapis.com/index.html?path=2.42/
+
 
 ### Installing
 
@@ -25,13 +46,23 @@ git clone https://github.com/adriangoris/facebook-nukeit-python.git
 cd facebook-nukeit-python
 pip install -r requirements.txt
 cp config.cfg.example config.cfg
+```
+
+Now populate the config.cfg file with username, password and dates you want to be Nuked
+
+```
+CONFIG.cfg
+[facebook]
+username = 
+password =
+start_date = 2011-01-01
+end_date = 2018-10-01
+```
+
+Then run the python facebook nukeit file
+
+```
 python facebook-nukeit.py
-```
-
-And repeat
-
-```
-until finished
 ```
 
 End with an example of getting some data out of the system or using it for a little demo

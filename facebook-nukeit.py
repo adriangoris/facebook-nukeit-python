@@ -1,46 +1,57 @@
 #!/usr/bin/env
 
-import ConfigParser
+import configparser
 from time import sleep
 from datetime import datetime, timedelta
 from collections import OrderedDict
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import NoSuchElementException
+import pdb
 # from selenium.webdriver.support.ui import WebDriverWait
 # from selenium.webdriver.support.ui import Select
 # from selenium.webdriver.common.by import By
 # from selenium.common.exceptions import TimeoutException 
 # from selenium.webdriver.support import expected_conditions
-# import pickle
+import pickle
 
 class FacebookNukeIt():
 
     def __init__(self, username, password):
         if username == None:
-            print "no username provided in config"
+            print("no username provided in config")
             return False
         if password == None:
-            print "no password provided in config"
+            print("no password provided in config")
             return False
 
         self.username = username
         self.password = password
         self.fb_activity_url = "https://mbasic.facebook.com/" + username +  "/allactivity"
-        print self.fb_activity_url
+        print(self.fb_activity_url)
         chrome_options = webdriver.ChromeOptions()
         prefs = {"profile.default_content_setting_values.notifications" : 2}
         chrome_options.add_experimental_option("prefs",prefs)
 
-        self.driver = webdriver.Chrome(executable_path="/usr/local/bin/chromedriver", chrome_options=chrome_options)
+        self.driver = webdriver.Chrome(executable_path="/usr/local/bin/chromedriver", options=chrome_options)
 
     def run(self, start_date, end_date):
 
         dates = [start_date, end_date]
 
         start, end = [datetime.strptime(_, "%Y-%m-%d") for _ in dates]
-        self.date_range_list = OrderedDict(((start + timedelta(_)).strftime(r"%B %Y"), None) for _ in xrange((end - start).days)).keys()
-        self.years_list = OrderedDict(((start + timedelta(_)).strftime(r"%Y"), None) for _ in xrange((end - start).days)).keys()
+        # self.date_range_list = OrderedDict(((start + timedelta(_)).strftime(r"%B %Y"), None) for _ in range((end - start).days)).keys()
+        # self.years_list = OrderedDict(((start + timedelta(_)).strftime(r"%Y"), None) for _ in range((end - start).days)).keys()
+        self.date_range_list = [
+        'January 2017', 'February 2017', 'March 2017', 'April 2017', 'May 2017', 
+        'June 2017', 'July 2017', 'August 2017', 'September 2017', 'October 2017', 
+        'November 2017', 'December 2017', 'January 2018', 'February 2018', 'March 2018', 
+        'April 2018', 'May 2018', 'June 2018', 'July 2018', 'August 2018', 'September 2018', 
+        'October 2018', 'November 2018', 'December 2018', 'January 2019', 'February 2019', 
+        'March 2019', 'April 2019', 'May 2019', 'June 2019', 'July 2019', 'August 2019', 
+        'September 2019', 'October 2019', 'November 2019', 'December 2019']
+
+        self.years_list = ['2017', '2018', '2019']
 
         self.driver.get('https://mbasic.facebook.com/')
         print("Opened facebook...")
@@ -53,18 +64,21 @@ class FacebookNukeIt():
         c = self.driver.find_element_by_name('login')
         c.click()
 
-        try:
-            self.driver.find_elements_by_xpath("//*[contains(text(), 'Activity Log')]")
-        except:
-            print("Did not find the \"Acivity Log\". Perhaps Facebook thinks we are a robot.")
-            input("Press Enter to continue...")
-            pass
+        # try:
+        #     self.driver.find_elements_by_xpath("//*[contains(text(), 'Activity Log')]")
+        # except:
+        #     print("Did not find the \"Acivity Log\". Perhaps Facebook thinks we are a robot.")
+        #     input("Press Enter to continue...")
+        #     pass
 
         self.driver.get(self.fb_activity_url)
-        #pickle.dump( self.driver.get_cookies() , open("cookies.pkl","wb"))
+        print(self.fb_activity_url)
+
+
+        # pickle.dump( self.driver.get_cookies() , open("cookies.pkl","wb"))
         # cookies = pickle.load(open("cookies.pkl", "rb"))
         # for cookie in cookies:
-        #     driver.add_cookie(cookie)
+        #     self.driver.add_cookie(cookie)
 
         self.load_more_activity()
 
@@ -122,6 +136,7 @@ class FacebookNukeIt():
         try:
             delete_link = self.driver.find_element_by_partial_link_text('Delete').click()
             print("Successfully deleted an activity.")
+            self.driver.execute_script("window.history.go(-1)")
         except NoSuchElementException as exception:
             print("Failed to find any acivity to delete. Moving on...")
             return False
@@ -131,13 +146,14 @@ class FacebookNukeIt():
         try:
             unlike_link = self.driver.find_element_by_partial_link_text('Unlike').click()
             print("Successfully unliked an activity.")
+            self.driver.execute_script("window.history.go(-1)")
         except NoSuchElementException as exception:
             print("Failed to find any acivity to unlike. Moving on...")
             return False
         self.unlike_activity()
 
 def main():
-    config = ConfigParser.ConfigParser()
+    config = configparser.ConfigParser()
     config.read('config.cfg')
     fb_username = config.get('facebook', 'username')
     fb_password = config.get('facebook', 'password')

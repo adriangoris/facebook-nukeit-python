@@ -1,6 +1,6 @@
 # Facebook Nuke It - Python
 
-A simple script to delete and unlike all one's user activity on facebook. Runs on Python 2.7. 
+A simple script to delete and unlike all one's user activity on facebook. Runs on Python 3.7. 
 
 ## Getting Started
 
@@ -107,7 +107,7 @@ We use [SemVer](http://semver.org/) for versioning. For the versions available, 
 
 ## Authors
 
-* **Billie Thompson** - *Initial work* - [PurpleBooth](https://github.com/PurpleBooth)
+* **Adrian Goris** - *Initial work* - (https://github.com/adriangoris)
 
 See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
 

@@ -90,6 +90,7 @@ class FacebookNukeIt():
         self.delete_activity()
         self.unlike_activity()
         self.remove_reaction()
+        self.hide_from_timeline_activity()
 
         # pdb.set_trace()
 
@@ -165,6 +166,21 @@ class FacebookNukeIt():
                 print("Failed to find any acivity to delete. Moving on...")
                 return False
         self.delete_activity()
+
+    def hide_from_timeline_activity(self):
+        try:
+            delete_link = self.driver.find_element_by_partial_link_text('Hide from Timeline').click()
+            print("Successfully deleted an activity.")
+            self.driver.execute_script("window.history.go(-1)")
+        except NoSuchElementException as exception:
+            try:
+                delete_link = self.driver.find_element_by_partial_link_text('hide from timeline').click()
+                print("Successfully deleted an activity.")
+                self.driver.execute_script("window.history.go(-1)")
+            except:
+                print("Failed to find any acivity to delete. Moving on...")
+                return False
+        self.hide_from_timeline_activity()
 
     def unlike_activity(self):
         try:

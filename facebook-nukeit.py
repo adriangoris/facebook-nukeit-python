@@ -43,15 +43,16 @@ class FacebookNukeIt():
         # self.date_range_list = OrderedDict(((start + timedelta(_)).strftime(r"%B %Y"), None) for _ in range((end - start).days)).keys()
         # self.years_list = OrderedDict(((start + timedelta(_)).strftime(r"%Y"), None) for _ in range((end - start).days)).keys()
         self.date_range_list = [
-        'January 2017', 'February 2017', 'March 2017', 'April 2017', 'May 2017', 
-        'June 2017', 'July 2017', 'August 2017', 'September 2017', 'October 2017', 
-        'November 2017', 'December 2017', 'January 2018', 'February 2018', 'March 2018', 
-        'April 2018', 'May 2018', 'June 2018', 'July 2018', 'August 2018', 'September 2018', 
-        'October 2018', 'November 2018', 'December 2018', 'January 2019', 'February 2019', 
-        'March 2019', 'April 2019', 'May 2019', 'June 2019', 'July 2019', 'August 2019', 
-        'September 2019', 'October 2019', 'November 2019', 'December 2019']
+        'January 2017', 'February 2017', 'March 2017', 'April 2017', 'May 2017',
+        'June 2017', 'July 2017', 'August 2017', 'September 2017', 'October 2017',
+        'November 2017', 'December 2017', 'January 2018', 'February 2018', 'March 2018',
+        'April 2018', 'May 2018', 'June 2018', 'July 2018', 'August 2018', 'September 2018',
+        'October 2018', 'November 2018', 'December 2018', 'January 2019', 'February 2019', 'March 2019',
+        'April 2019', 'May 2019', 'June 2019', 'July 2019', 'August 2019', 'September 2019',
+        'October 2019', 'November 2019', 'December 2019', 'January 2020', 'February 2020', 'March 2020',
+        'April 2020']
 
-        self.years_list = ['2017', '2018', '2019']
+        self.years_list = ['2017', '2018', '2019', '2020']
 
         self.driver.get('https://mbasic.facebook.com/')
         print("Opened facebook...")
@@ -88,6 +89,9 @@ class FacebookNukeIt():
 
         self.delete_activity()
         self.unlike_activity()
+        self.remove_reaction()
+
+        # pdb.set_trace()
 
         try:
             load_more = self.driver.find_element_by_partial_link_text('Load more from').click()
@@ -132,14 +136,34 @@ class FacebookNukeIt():
         self.load_year_activity()
         return False
 
+    def remove_reaction(self):
+        try:
+            delete_link = self.driver.find_element_by_partial_link_text('Remove Reaction').click()
+            print("Successfully removed a reaction.")
+            self.driver.execute_script("window.history.go(-1)")
+        except NoSuchElementException as exception:
+            try:
+                delete_link = self.driver.find_element_by_partial_link_text('remove reaction').click()
+                print("Successfully removed a reaction.")
+                self.driver.execute_script("window.history.go(-1)")
+            except:
+                print("Failed to find any reactions to reactions. Moving on...")
+                return False
+        self.remove_reaction()
+
     def delete_activity(self):
         try:
             delete_link = self.driver.find_element_by_partial_link_text('Delete').click()
             print("Successfully deleted an activity.")
             self.driver.execute_script("window.history.go(-1)")
         except NoSuchElementException as exception:
-            print("Failed to find any acivity to delete. Moving on...")
-            return False
+            try:
+                delete_link = self.driver.find_element_by_partial_link_text('delete').click()
+                print("Successfully deleted an activity.")
+                self.driver.execute_script("window.history.go(-1)")
+            except:
+                print("Failed to find any acivity to delete. Moving on...")
+                return False
         self.delete_activity()
 
     def unlike_activity(self):
@@ -148,8 +172,13 @@ class FacebookNukeIt():
             print("Successfully unliked an activity.")
             self.driver.execute_script("window.history.go(-1)")
         except NoSuchElementException as exception:
-            print("Failed to find any acivity to unlike. Moving on...")
-            return False
+            try:
+                delete_link = self.driver.find_element_by_partial_link_text('unlike').click()
+                print("Successfully unliked an activity.")
+                self.driver.execute_script("window.history.go(-1)")
+            except:
+                print("Failed to find any acivity to unlike. Moving on...")
+                return False
         self.unlike_activity()
 
 def main():

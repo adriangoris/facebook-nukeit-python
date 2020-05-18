@@ -14,6 +14,7 @@ import pdb
 # from selenium.common.exceptions import TimeoutException 
 # from selenium.webdriver.support import expected_conditions
 import pickle
+import pandas as pd
 
 class FacebookNukeIt():
 
@@ -37,22 +38,14 @@ class FacebookNukeIt():
 
     def run(self, start_date, end_date):
 
-        dates = [start_date, end_date]
+        date_range_list = pd.date_range(start_date, end_date, freq="M").tolist()
+        years_list = pd.date_range(start_date, end_date, freq="Y").tolist()
 
-        start, end = [datetime.strptime(_, "%Y-%m-%d") for _ in dates]
-        # self.date_range_list = OrderedDict(((start + timedelta(_)).strftime(r"%B %Y"), None) for _ in range((end - start).days)).keys()
-        # self.years_list = OrderedDict(((start + timedelta(_)).strftime(r"%Y"), None) for _ in range((end - start).days)).keys()
-        self.date_range_list = [
-        'January 2017', 'February 2017', 'March 2017', 'April 2017', 'May 2017',
-        'June 2017', 'July 2017', 'August 2017', 'September 2017', 'October 2017',
-        'November 2017', 'December 2017', 'January 2018', 'February 2018', 'March 2018',
-        'April 2018', 'May 2018', 'June 2018', 'July 2018', 'August 2018', 'September 2018',
-        'October 2018', 'November 2018', 'December 2018', 'January 2019', 'February 2019', 'March 2019',
-        'April 2019', 'May 2019', 'June 2019', 'July 2019', 'August 2019', 'September 2019',
-        'October 2019', 'November 2019', 'December 2019', 'January 2020', 'February 2020', 'March 2020',
-        'April 2020']
+        self.date_range_list = [_.strftime("%B %Y") for _ in date_range_list]
+        self.years_list = [ _.strftime("%Y") for _ in years_list]
 
-        self.years_list = ['2017', '2018', '2019', '2020']
+        print(self.date_range_list)
+        print(self.years_list)
 
         self.driver.get('https://mbasic.facebook.com/')
         print("Opened facebook...")
@@ -196,6 +189,7 @@ class FacebookNukeIt():
                 print("Failed to find any acivity to unlike. Moving on...")
                 return False
         self.unlike_activity()
+
 
 def main():
     config = configparser.ConfigParser()
